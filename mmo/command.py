@@ -26,13 +26,13 @@ def split_len(s: str, len_i: int) -> list:
         i += 1
     return _
 
-class command(commands.Cog): #ここのcommandはhelpの時に[{prefix}help コマンド名]としたときにこのファイルのコマンドが指定されたときにクラス名を取得するので変える場合はhelpの中も変えてください。
+class Command(commands.Cog): #ここのCommandはhelpの時に[{prefix}help コマンド名]としたときにこのファイルのコマンドが指定されたときにクラス名を取得するので変える場合はhelpの中も変えてください。
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(name="help", pass_context=True, description='ユーザーコマンド') # コマンド名:『help』 省略コマンド:『なし』
+    @commands.command(name="help", description='ユーザーコマンド') # コマンド名:『help』 省略コマンド:『なし』
     @commands.bot_has_permissions(read_messages=True, send_messages=True, embed_links=True, add_reactions=True, manage_messages=True, read_message_history=True) #これ絶対消しちゃダメ
-    async def helps(self, ctx, command_content=""): #既に存在する関数名だったらERROR出るのでもし今後コマンドを追加するならコマンド名と同じ関数名にして下さい。(ここは例外)
+    async def helps(self, ctx: commands.Context, command_content: str = ""): #既に存在する関数名だったらERROR出るのでもし今後コマンドを追加するならコマンド名と同じ関数名にして下さい。(ここは例外)
         f"""
         {prefix}helpでコマンドの処理を開始。 ヘルプを表示します。
         ボットの運営の場合は新たなページが表示されます。
@@ -41,7 +41,7 @@ class command(commands.Cog): #ここのcommandはhelpの時に[{prefix}help コ�
         今後新たにhelp_messageに文字列を追加した場合に備えてページ分けを自動でさせてます。
         f"""
         try: # ERRORが起きるか起きないか。起きたらexceptに飛ばされる
-          # sqlite_listの中からデータベースに接続したというオブジェクトを取得
+            # sqlite_listの中からデータベースに接続したというオブジェクトを取得
             _, conn, cur = [sql for sql in self.bot.sqlite_list if ctx.author.id == sql[0]][0]
             if command_content == "":
                 help_message = [
@@ -83,10 +83,10 @@ class command(commands.Cog): #ここのcommandはhelpの時に[{prefix}help コ�
         except: # 上のERROR以外のERROR出た場合はtracebackで表示するようにしています。 上手くコマンドが反応しない場合はコンソールを見てね！
             return print("エラー情報\n" + traceback.format_exc())
 
-    @commands.command(name="attack", aliases=["atk"], pass_context=True, description='ユーザーコマンド') # コマンド名:『attack』 省略コマンド:『atk』
+    @commands.command(name="attack", aliases=["atk"], description='ユーザーコマンド') # コマンド名:『attack』 省略コマンド:『atk』
     @commands.bot_has_permissions(read_messages=True, send_messages=True, embed_links=True, add_reactions=True, manage_messages=True, read_message_history=True) #これ絶対消しちゃダメ
-    async def attack(self, ctx): #既に存在する関数名だったらERROR出るのでもし今後コマンドを追加するならコマンド名と同じ関数名にして下さい。
-        f"""敵に攻撃するf"""
+    async def attack(self, ctx: commands.Context): #既に存在する関数名だったらERROR出るのでもし今後コマンドを追加するならコマンド名と同じ関数名にして下さい。
+        """敵に攻撃する"""
         try: # ERRORが起きるか起きないか。起きたらexceptに飛ばされる
           # sqlite_listの中からデータベースに接続したというオブジェクトを取得
             _, conn, cur = [sql for sql in self.bot.sqlite_list if ctx.author.id == sql[0]][0]
@@ -101,10 +101,10 @@ class command(commands.Cog): #ここのcommandはhelpの時に[{prefix}help コ�
     @commands.command(name="item", aliases=["i"], pass_context=True, description='ユーザーコマンド') # コマンド名:『item』 省略コマンド:『i』
     @commands.bot_has_permissions(read_messages=True, send_messages=True, embed_links=True, add_reactions=True, manage_messages=True, read_message_history=True) #これ絶対消しちゃダメ
     async def item(self, ctx, item_name=""): #既に存在する関数名だったらERROR出るのでもし今後コマンドを追加するならコマンド名と同じ関数名にして下さい。
-        f"""
+        """
         アイテムを使う
         item_nameが何もないの場合は手持ちアイテムのリストが返ってくるよ！
-        f"""
+        """
         try: # ERRORが起きるか起きないか。起きたらexceptに飛ばされる
           # sqlite_listの中からデータベースに接続したというオブジェクトを取得
             _, conn, cur = [sql for sql in self.bot.sqlite_list if ctx.author.id == sql[0]][0]
@@ -116,13 +116,13 @@ class command(commands.Cog): #ここのcommandはhelpの時に[{prefix}help コ�
         except: # 上のERROR以外のERROR出た場合はtracebackで表示するようにしています。 上手くコマンドが反応しない場合はコンソールを見てね！
             return print("エラー情報\n" + traceback.format_exc())
 
-    @commands.command(name='status', aliases=['st'], pass_context=True, description="ユーザーコマンド") # コマンド名:『status』 省略コマンド:『st』
+    @commands.command(name='status', aliases=['st'], description="ユーザーコマンド") # コマンド名:『status』 省略コマンド:『st』
     @commands.bot_has_permissions(read_messages=True, send_messages=True, embed_links=True, add_reactions=True, manage_messages=True, read_message_history=True) #これ絶対消しちゃダメ
-    async def status(self, ctx): #既に存在する関数名だったらERROR出るのでもし今後コマンドを追加するならコマンド名と同じ関数名にして下さい。
-        f"""
+    async def status(self, ctx: commands.Context): #既に存在する関数名だったらERROR出るのでもし今後コマンドを追加するならコマンド名と同じ関数名にして下さい。
+        """
         ステータスの表示。
         今後アイテム追加した場合に備えてページ分けを自動でさせてます。
-        f"""
+        """
         try: # ERRORが起きるか起きないか。起きたらexceptに飛ばされる
           # sqlite_listの中からデータベースに接続したというオブジェクトを取得
             _, conn, cur = [sql for sql in self.bot.sqlite_list if ctx.author.id == sql[0]][0]
@@ -185,14 +185,14 @@ class command(commands.Cog): #ここのcommandはhelpの時に[{prefix}help コ�
         except: # 上のERROR以外のERROR出た場合はtracebackで表示するようにしています。 上手くコマンドが反応しない場合はコンソールを見てね！
             return print("エラー情報\n" + traceback.format_exc())
 
-    @commands.command(name='inquiry', aliases=['inq'], pass_context=True, description="ユーザーコマンド") # コマンド名:『inquiry』 省略コマンド:『inq』
+    @commands.command(name='inquiry', aliases=['inq'], description="ユーザーコマンド") # コマンド名:『inquiry』 省略コマンド:『inq』
     @commands.bot_has_permissions(read_messages=True, send_messages=True, embed_links=True, add_reactions=True, manage_messages=True, read_message_history=True) #これ絶対消しちゃダメ
-    async def inquiry(self, ctx): #既に存在する関数名だったらERROR出るのでもし今後コマンドを追加するならコマンド名と同じ関数名にして下さい。
-        f"""
+    async def inquiry(self, ctx: commands.Context): #既に存在する関数名だったらERROR出るのでもし今後コマンドを追加するならコマンド名と同じ関数名にして下さい。
+        """
         今何人が戦闘に参加しているのかを表示。
         1500文字毎にページを分けさせるようにしてます。
         戦闘が行われない場合は行われてないというメッセージが返ってきます。
-        f"""
+        """
         try: # ERRORが起きるか起きないか。起きたらexceptに飛ばされる
           # sqlite_listの中からデータベースに接続したというオブジェクトを取得
             _, conn, cur = [sql for sql in self.bot.sqlite_list if ctx.author.id == sql[0]][0]
@@ -233,13 +233,13 @@ class command(commands.Cog): #ここのcommandはhelpの時に[{prefix}help コ�
         except: # 上のERROR以外のERROR出た場合はtracebackで表示するようにしています。 上手くコマンドが反応しない場合はコンソールを見てね！
             return print("エラー情報\n" + traceback.format_exc())
 
-    @commands.command(name="reset", aliases=['re', 'rs'], pass_context=True, description='ユーザーコマンド') # コマンド名:『reset』 省略コマンド:『re, rs』
+    @commands.command(name="reset", aliases=['re', 'rs'], description='ユーザーコマンド') # コマンド名:『reset』 省略コマンド:『re, rs』
     @commands.bot_has_permissions(read_messages=True, send_messages=True, embed_links=True, add_reactions=True, manage_messages=True, read_message_history=True) #これ絶対消しちゃダメ
-    async def reset(self, ctx): #既に存在する関数名だったらERROR出るのでもし今後コマンドを追加するならコマンド名と同じ関数名にして下さい。
-        f"""
+    async def reset(self, ctx: commands.Context): #既に存在する関数名だったらERROR出るのでもし今後コマンドを追加するならコマンド名と同じ関数名にして下さい。
+        """
         戦闘がそのチャンネルで行われている場合はresetが出来ます。
         戦闘が行われない場合は行われてないというメッセージが返ってきます。
-        f"""
+        """
         try: # ERRORが起きるか起きないか。起きたらexceptに飛ばされる
           # sqlite_listの中からデータベースに接続したというオブジェクトを取得
             _, conn, cur = [sql for sql in self.bot.sqlite_list if ctx.author.id == sql[0]][0]
@@ -258,13 +258,13 @@ class command(commands.Cog): #ここのcommandはhelpの時に[{prefix}help コ�
             return print("エラー情報\n" + traceback.format_exc())
 
     @commands.cooldown(1, 3, commands.BucketType.user) #3秒間のクールタイム
-    @commands.command(name="t", pass_context=True, description="ユーザーコマンド") # コマンド名:『t』 省略コマンド:『なし』
+    @commands.command(name="t", description="ユーザーコマンド") # コマンド名:『t』 省略コマンド:『なし』
     @commands.bot_has_permissions(read_messages=True, send_messages=True, embed_links=True, add_reactions=True, manage_messages=True, read_message_history=True) #これ絶対消しちゃダメ
-    async def t(self, ctx): #既に存在する関数名だったらERROR出るのでもし今後コマンドを追加するならコマンド名と同じ関数名にして下さい。
-        f"""
+    async def t(self, ctx: commands.Context): #既に存在する関数名だったらERROR出るのでもし今後コマンドを追加するならコマンド名と同じ関数名にして下さい。
+        """
         トレーニングコマンド。
         training.jsonファイルから問題と答えを持ってきています。
-        f"""
+        """
         try: # ERRORが起きるか起きないか。起きたらexceptに飛ばされる
           # sqlite_listの中からデータベースに接続したというオブジェクトを取得
             _, conn, cur = [sql for sql in self.bot.sqlite_list if ctx.author.id == sql[0]][0]
@@ -302,14 +302,14 @@ class command(commands.Cog): #ここのcommandはhelpの時に[{prefix}help コ�
         except: # 上のERROR以外のERROR出た場合はtracebackで表示するようにしています。 上手くコマンドが反応しない場合はコンソールを見てね！
             return print("エラー情報\n" + traceback.format_exc())
 
-    @commands.command(name='ranking', aliases=['rank'], pass_context=True, description='ユーザーコマンド') # コマンド名:『ranking』 省略コマンド:『rank』
+    @commands.command(name='ranking', aliases=['rank'], description='ユーザーコマンド') # コマンド名:『ranking』 省略コマンド:『rank』
     @commands.bot_has_permissions(read_messages=True, send_messages=True, embed_links=True, add_reactions=True, manage_messages=True, read_message_history=True) #これ絶対消しちゃダメ
-    async def ranking(self, ctx): #既に存在する関数名だったらERROR出るのでもし今後コマンドを追加するならコマンド名と同じ関数名にして下さい。
-        f"""
+    async def ranking(self, ctx: commands.Context): #既に存在する関数名だったらERROR出るのでもし今後コマンドを追加するならコマンド名と同じ関数名にして下さい。
+        """
         各種ランキングの表示
         各種100位まで表示するようにしております。
         10位ごとに勝手にページが分けられます。
-        f"""
+        """
         try: # ERRORが起きるか起きないか。起きたらexceptに飛ばされる
             bot = self.bot
             r_dict = {'0⃣': "プレイヤーランキング", '1⃣': "BOTランキング",  '2⃣': "鯖ランキング"}
@@ -369,5 +369,5 @@ class command(commands.Cog): #ここのcommandはhelpの時に[{prefix}help コ�
         except: # 上のERROR以外のERROR出た場合はtracebackで表示するようにしています。 上手くコマンドが反応しない場合はコンソールを見てね！
             return print("エラー情報\n" + traceback.format_exc())
 
-def setup(bot): # 絶対必須
-    bot.add_cog(command(bot)) # class クラス名(commands.Cog):のクラス名と同じにしないといけない 例:[bot.add_cog(クラス名(bot))]
+async def setup(bot): # 絶対必須
+    await bot.add_cog(Command(bot)) # class クラス名(commands.Cog):のクラス名と同じにしないといけない 例:[bot.add_cog(クラス名(bot))]
