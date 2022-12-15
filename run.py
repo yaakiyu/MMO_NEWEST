@@ -58,7 +58,7 @@ async def run():
 
 class MyBot(commands.Bot):
     def __init__(self, **kwargs):
-        super().__init__(command_prefix=commands.when_mentioned_or(prefix), fetch_offline_members=False, pm_help=None, help_attrs=dict(hidden=True), loop=loop)
+        super().__init__(command_prefix=commands.when_mentioned_or(prefix), fetch_offline_members=False, pm_help=None, help_attrs=dict(hidden=True), loop=loop, intents=discord.Intents.all())
         self.sqlite_list = kwargs.pop("sqlite_list")
         self.on_ready_complete = kwargs.pop("on_ready_complete")
         self.only_admin = kwargs.pop("only_admin")
@@ -115,7 +115,7 @@ class MyBot(commands.Bot):
         except: # 上のERROR以外のERROR出た場合はtracebackで表示するようにしています。 上手くコマンドが反応しない場合はコンソールを見てね！
             return print("エラー情報\n" + format_exc())
 
-    f"""この下の#を取ればBOTでも遊べるようになります。f"""
+    "この下の#を取ればBOTでも遊べるようになります。"
     #async def process_commands(self, message):
     #    if not self.on_ready_complete: # on_ready関数が通ったらself.on_ready_completeを通るようになる
     #        return # ここのreturnは必須
@@ -131,7 +131,7 @@ class MyBot(commands.Bot):
         try: # ERRORが起きるか起きないか。起きたらexceptに飛ばされる
             # コマンドが存在してない場合
             if isinstance(e, commands.CommandNotFound):
-                return await ctx.send(embed=Embed(description=f"そのコマンドは存在しません。"))
+                return await ctx.send(embed=Embed(description="そのコマンドは存在しません。"))
             # @commands.bot_has_permissions(read_messages=True, send_messages=True, embed_links=True, add_reactions=True, manage_messages=True, read_message_history=True)
             # コマンドの場所で上記のように書かれてると思いますがBOTにその権限が無い場合にこのERRORになります。
             elif isinstance(e, commands.BotMissingPermissions):
