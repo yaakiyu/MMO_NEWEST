@@ -13,7 +13,7 @@ from all_data.all_data import item_lists
 special_monster, N_monster = {}, {}
 rera_monster, nomal_monster = [], []
 
-f"""登録されているモンスターは起動時のみしか読み込まないので敵を追加する場合は再起動してください。f"""
+"""登録されているモンスターは起動時のみしか読み込まないので敵を追加する場合は再起動してください。"""
 for file in glob.glob("./monster/*"): # monsterディレクトリとかファイル一覧を取得
     with open(r'' + file + '', encoding='utf-8') as fh:
         json_txt = str(fh.read()).replace("'", '"').replace('True', 'true').replace('False', 'false')
@@ -24,9 +24,9 @@ for file in glob.glob("./monster/*"): # monsterディレクトリとかファイ
               # if "【通常】" == x["rank"]: # 敵のランクが【通常】だった場合
               #    nomal_monster.append(x) # 通常枠としてモンスターを登録
 
-            if "rera" in f"{file}": # ファイル名に"rera"が入ってた場合
+            if "rera" in str(file): # ファイル名に"rera"が入ってた場合
                 rera_monster.append(x) # レア枠としてモンスターを登録
-            if "normal" in f"{file}": # ファイル名に"normal"が入ってた場合
+            if "normal" in str(file): # ファイル名に"normal"が入ってた場合
                 nomal_monster.append(x) # 通常枠としてモンスターを登録
 
 def monster_info(channel_id): # モンスターの名前、画像、ランクを取得
