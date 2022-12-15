@@ -11,8 +11,8 @@ from .detabase import database
 from discord import Embed, NotFound, Forbidden
 from all_data.all_data import item_lists, admin_list, prefix
 
-f = open(r'./all_data/training.json', encoding='utf-8')
-training_set = json.load(f)
+with open(r'./all_data/training.json', encoding='utf-8') as f:
+    training_set = json.load(f)
 
 def split_len(s: str, len_i: int) -> list:
     _ = s.split("\n")
@@ -39,7 +39,7 @@ class Command(commands.Cog): #ここのCommandはhelpの時に[{prefix}help コ�
         『@commands.command(name="コマンド名", description='この場所')』
         {prefix}help コマンド名で上記の『この場所』という部分が表示されるよ！
         今後新たにhelp_messageに文字列を追加した場合に備えてページ分けを自動でさせてます。
-        f"""
+        """
         try: # ERRORが起きるか起きないか。起きたらexceptに飛ばされる
             # sqlite_listの中からデータベースに接続したというオブジェクトを取得
             _, conn, cur = [sql for sql in self.bot.sqlite_list if ctx.author.id == sql[0]][0]
@@ -53,7 +53,7 @@ class Command(commands.Cog): #ここのCommandはhelpの時に[{prefix}help コ�
 
                 embeds = []
                 for embed in help_message:
-                    embeds.append(Embed(title=f"TAO(Tsukishima Art Online)の遊び方", description=embed).set_thumbnail(url=self.bot.user.avatar_url_as()).set_footer(text="[{prefix}help コマンド名]で詳細を開けるよ"))
+                    embeds.append(Embed(title=f"{self.bot.user}の遊び方", description=embed).set_thumbnail(url=self.bot.user.avatar_url_as()).set_footer(text=f"[{prefix}help コマンド名]で詳細を開けるよ"))
                 msg = await ctx.send(content=f"```diff\n1ページ/{len(embeds)}ページ目を表示中\n見たいページを発言してください。\n30秒経ったら処理は止まります。\n0と発言したら強制的に処理は止まります。```", embed=embeds[0])
                 while True: # 処理が終わる(return)まで無限ループ
                     try: # ERRORが起きるか起きないか。起きたらexceptに飛ばされる
@@ -76,7 +76,7 @@ class Command(commands.Cog): #ここのCommandはhelpの時に[{prefix}help コ�
                             embeds.set_footer(text="その他の同じコマンド: " + ",".join([c.name] + c.aliases)) # aliasesが設定されてる場合はここに表示されます。
                             return await ctx.send(embed=embeds)
 
-                return await ctx.send(embed=Embed(title=f"コマンド名:『{prefix}{command_content}』", description=f"説明:```おっと、このコマンドは存在しないようだ！\n君が運営になってこのコマンドを追加してみないか？```"))
+                return await ctx.send(embed=Embed(title=f"コマンド名:『{prefix}{command_content}』", description="説明:```おっと、このコマンドは存在しないようだ！\n君が運営になってこのコマンドを追加してみないか？```"))
 
         except (NotFound, asyncio.TimeoutError, Forbidden): # 編集した際に文字が見つからなかった, wait_forの時間制限を超過した場合, メッセージに接続できなかった
             return
@@ -224,7 +224,7 @@ class Command(commands.Cog): #ここのCommandはhelpの時に[{prefix}help コ�
                         await msg.edit(content=f"```diff\n{int(msg_react.content)}ページ/{len(embeds)}ページ目を表示中\n見たいページを発言してください。\n30秒経ったら処理は止まります。\n0と発言したら強制的に処理は止まります。```", embed=embeds[int(msg_react.content)-1])
                     except asyncio.TimeoutError: # wait_forの時間制限を超過した場合
                       # このcontentの中にはゼロ幅スペースが入っています。Noneでもいいのですが編集者はこっちの方が分かりやすいからこうしています。
-                        return await msg.edit(content="‌", embed=Embed(title=f"時間切れです..."))
+                        return await msg.edit(content="‌", embed=Embed(title="時間切れです..."))
             else:
                 return await ctx.send(embed=Embed(description=f"{ctx.author.mention}さん...\nこのチャンネルで戦闘は行われてませんよ?"))
 
