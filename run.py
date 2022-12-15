@@ -14,7 +14,7 @@ loop = new_event_loop()
 
 async def run():
     if not prefix: #prefixが設定されてない場合
-        return print(f"""prefixを設定してね！ TAOボットで言う[{prefix}]みたいなもんだよ！ "./all_data/setting.json"で設定可能！f""")
+        return print(f"""prefixを設定してね！ TAOボットで言う[{prefix}]みたいなもんだよ！ "./all_data/setting.json"で設定可能！""")
 
     # only_adminの[]に["a"]等とした場合はボット運営のみ使用可能となります。
     sqlite_list, on_ready_complete, only_admin, ban_member = [], [], [], []
@@ -23,7 +23,7 @@ async def run():
         if not os.path.exists("./all_data/mmo.db"):
             # ./all_data/mmo.dbが存在してない場合は自動的に作成されます。
             # そして自動的に現段階で必要な環境にします。
-            open(f"./all_data/mmo.db", "w").close() # 存在しない場合は./all_data/mmo.dbが作成される
+            open("./all_data/mmo.db", "w").close() # 存在しない場合は./all_data/mmo.dbが作成される
             async with connect('./all_data/mmo.db') as conn: # データベースに接続
                 async with conn.cursor() as cur:
                     await conn.commit() # データベースを最新の情報にするために更新する。 絶対必須
@@ -64,7 +64,9 @@ class MyBot(commands.Bot):
         self.only_admin = kwargs.pop("only_admin")
         self.ban_member = kwargs.pop("ban_member")
         self.remove_command('help') # helpコマンドを除外
-        [self.load_extension(f'mmo.{c}') for c in ["command", "debug", "system"]] # mmoディレクトリからファイルを読み込む
+    
+    async def setup_hook(self): # awaitが必要な動作をするときに使える__init__の代わり
+        [(await self.load_extension(f'mmo.{c}')) for c in ["command", "debug", "system"]] # mmoディレクトリからファイルを読み込む
 
     def remove_from_list(self, u_id, c_id):
         [all_commands_user.remove(u) for u in all_commands_user if u in all_commands_user and u == u_id]
